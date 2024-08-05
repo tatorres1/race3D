@@ -1,8 +1,9 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CamaraOrbit : MonoBehaviour
+public class CamaraOrbit : MonoBehaviourPunCallbacks
 {
     private float angle = -90 * Mathf.Deg2Rad;
     public Transform follow;
@@ -11,10 +12,20 @@ public class CamaraOrbit : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+         if (!photonView.IsMine)
+        {
+            // Destruye la cámara si no pertenece al jugador local
+            Destroy(gameObject);
+        }
     }
     private void Update()
     {
+        if (!photonView.IsMine)
+        {
+            return;
+        }
+
+
         float hor = Input.GetAxis("Mouse X");
         if(hor != 0)
         {
@@ -25,6 +36,12 @@ public class CamaraOrbit : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
+
+        if (!photonView.IsMine)
+        {
+            return;
+        }
+
         Vector3 orbit =  new Vector3(
             Mathf.Cos(angle),
             0,

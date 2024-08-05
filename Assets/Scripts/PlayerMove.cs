@@ -1,8 +1,9 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMove : MonoBehaviour
+public class PlayerMove : MonoBehaviourPunCallbacks
 {
 
     public float runSpeed = 7;
@@ -16,9 +17,22 @@ public class PlayerMove : MonoBehaviour
     public float groundDistance = 0.1f;
     public LayerMask groundMask;
     bool IsGrounded;
-
+    void Start()
+    {
+        if (!photonView.IsMine)
+        {
+            // Desactiva el script y componentes de movimiento y cámara para jugadores remotos
+            enabled = false;
+            GetComponent<Rigidbody>().isKinematic = true; // Evita que los jugadores remotos afecten la física
+        }
+    }
     void Update()
     {
+        if (!photonView.IsMine)
+        {
+            return;
+        }
+
         x = Input.GetAxis("Horizontal");
         y = Input.GetAxis("Vertical");
         transform.Rotate(0, x * Time.deltaTime *rotationSpeed,0);   
