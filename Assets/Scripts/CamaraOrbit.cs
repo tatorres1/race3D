@@ -12,12 +12,13 @@ public class CamaraOrbit : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
-         if (!photonView.IsMine)
+        if (!photonView.IsMine)
         {
             // Destruye la cámara si no pertenece al jugador local
             Destroy(gameObject);
         }
     }
+
     private void Update()
     {
         if (!photonView.IsMine)
@@ -25,9 +26,8 @@ public class CamaraOrbit : MonoBehaviourPunCallbacks
             return;
         }
 
-
         float hor = Input.GetAxis("Mouse X");
-        if(hor != 0)
+        if (hor != 0)
         {
             angle += hor * Mathf.Deg2Rad;
         }
@@ -36,19 +36,18 @@ public class CamaraOrbit : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void LateUpdate()
     {
-
         if (!photonView.IsMine)
         {
             return;
         }
 
-        Vector3 orbit =  new Vector3(
+        Vector3 orbit = new Vector3(
             Mathf.Cos(angle),
             0,
-            Mathf.Sin(angle) 
-            );
+            Mathf.Sin(angle)
+        );
+
         transform.position = follow.position + orbit * distance;
-        
         transform.rotation = Quaternion.LookRotation(follow.position - transform.position);
     }
 }
